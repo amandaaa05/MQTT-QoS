@@ -3,3 +3,13 @@ services:
     image: eclipse-mosquitto:2
     ports:
       - "1883:1883"
+  node-red:
+    image: nodered/node-red:latest
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red-data:/data
+    depends_on:
+      - mosquitto
+    environment:
+      - TZ=America/Sao_Paulo

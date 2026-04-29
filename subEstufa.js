@@ -18,6 +18,7 @@ client.on("connect", (connack) => {
   client.subscribe("estufa/temp/ambiente", { qos: 0 }); // Temperatura - ok perder
   client.subscribe("estufa/agua/nivel", { qos: 1 }); // Água - não pode perder
   client.subscribe("estufa/alerta/incendio", { qos: 2 }); // Incêndio - exatamente 1x
+  client.subscribe("estufa/controle/bomba", { qos: 1 }); // Controle - recebido do Node-RED
 
   console.log("📡 Assinado em todos os tópicos da estufa");
 });
@@ -45,6 +46,12 @@ client.on("message", (topic, msg) => {
       console.log(`   Tipo: ${dados.tipo}`);
       console.log(`   Ação: ${dados.acao}`);
       console.log(`   🧯 Sistema de extinção ATIVADO!\n`);
+      break;
+
+    case "estufa/controle/bomba":
+      const estado = dados.ligada ? "LIGADA" : "DESLIGADA";
+      console.log(`\n⚙️  [${hora}] COMANDO DE CONTROLE RECEBIDO ⚙️`);
+      console.log(`   Ação: Bomba de Irrigação ${estado} remotamente (via Node-RED)\n`);
       break;
   }
 });
